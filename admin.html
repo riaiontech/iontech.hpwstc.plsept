@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IONTECH Admin</title><meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="./styles.css">
+<style>
+.admin-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.admin-tab{border:1px solid #d7e0ea;background:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}.admin-tab.active{background:#153b66;color:#fff;border-color:#153b66}.admin-section{display:none}.admin-section.active{display:block}.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field label{display:block;font-weight:700;margin-bottom:6px}.field input,.field textarea,.field select{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #cfd9e5;border-radius:8px;font:inherit;background:#fff}.field textarea{min-height:90px;resize:vertical}.full{grid-column:1/-1}.small-help{font-size:.83rem;color:#687789;margin-top:5px}.admin-list{display:grid;gap:8px;margin-top:14px}.admin-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border:1px solid #dce4ed;border-radius:10px;background:#fff}.admin-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.status{font-size:.9rem;color:#237a45;align-self:center}.table-wrap{overflow:auto;border:1px solid #dbe3ec;border-radius:10px;margin-top:10px}.edit-table{width:100%;border-collapse:collapse;min-width:620px}.edit-table th,.edit-table td{padding:9px;border-bottom:1px solid #e4eaf0;text-align:left;vertical-align:top}.edit-table th{background:#f5f8fb}.edit-table input{width:100%;box-sizing:border-box;padding:8px;border:1px solid #ccd7e2;border-radius:7px}.image-admin{display:grid;grid-template-columns:1fr 1fr;gap:14px}.image-slot{border:1px dashed #c8d4e0;border-radius:10px;padding:12px;background:#f9fbfd}.preview img{max-width:100%;max-height:180px;border-radius:8px;object-fit:contain}.hidden{display:none!important}.notice{padding:12px;border-radius:9px;background:#f4f8fc;border:1px solid #dce7f1}.seo-panel{border:1px solid #dbe3ec;border-radius:12px;padding:15px;background:#f8fbfe}.seo-panel h3{margin-top:0;color:#153b66}@media(max-width:700px){.admin-grid,.image-admin{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="container nav">
+<a class="brand" href="./" style="text-decoration:none"><div class="logo-box" data-logo><span>YOUR<br>LOGO</span></div><div><h1 data-brand>IONTECH</h1><p>Catalog Admin</p></div></a>
+<div class="nav-links"><a href="./">View catalog</a><button id="logout">Log out</button></div>
+</div></header>
+
+<main class="container admin-wrap">
+<section id="loginPanel" class="admin-card">
+<h2>Admin access</h2>
+<p class="notice"><strong>Important:</strong> this GitHub Pages version saves edits in this browser only. A shared public CMS requires a database/backend.</p>
+<form id="loginForm" style="max-width:520px"><div class="field"><label>Admin password</label><input id="adminPassword" type="password" required></div><button class="btn btn-primary" style="margin-top:12px">Sign in</button><p id="loginError" class="small" style="color:#b33a3a"></p></form>
+</section>
+
+<section id="adminPanel" class="hidden">
+<div class="admin-tabs">
+<button class="admin-tab active" data-tab="homepage">Homepage</button>
+<button class="admin-tab" data-tab="products">Products</button>
+<button class="admin-tab" data-tab="branding">Branding & SEO</button>
+<button class="admin-tab" data-tab="backup">Backup</button>
+</div>
+
+<section id="tab-homepage" class="admin-section active">
+<div class="admin-card"><h2>Homepage content</h2>
+<div class="admin-grid">
+<div class="field full"><label>Small label / kicker</label><input id="heroKicker"></div>
+<div class="field full"><label>Main heading</label><input id="heroHeading"></div>
+<div class="field full"><label>Main subheading</label><textarea id="heroSubheading"></textarea></div>
+<div class="field"><label>Main button text</label><input id="heroButtonText"></div>
+<div class="field"><label>Products heading</label><input id="productsHeading"></div>
+<div class="field"><label>Products subheading</label><input id="productsSubheading"></div>
+<div class="field full"><label>Products helper text</label><input id="productsHelper"></div>
+<div class="field"><label>Footer description</label><textarea id="footerDescription"></textarea></div>
+<div class="field"><label>Footer note</label><textarea id="footerNote"></textarea></div>
+<div class="field"><label>Pricelist updated as of</label><input id="pricelistDate" placeholder="September 16, 2026"></div>
+</div>
+<div class="admin-actions"><button id="saveHomepage" class="btn btn-primary">Save homepage</button><span id="homepageStatus" class="status"></span></div>
+</div>
+<div class="admin-card"><h2>Show / hide sections</h2>
+<label class="toggle-row"><input id="showHero" type="checkbox"> Show hero section</label>
+<label class="toggle-row"><input id="showHeroKicker" type="checkbox"> Show small label</label>
+<label class="toggle-row"><input id="showHeroButton" type="checkbox"> Show main button</label>
+<label class="toggle-row"><input id="showFooter" type="checkbox"> Show footer</label>
+</div>
+</section>
+
+<section id="tab-products" class="admin-section">
+<div class="admin-card"><h2>Product manager</h2><input id="productSearch" class="input" placeholder="Search model, SKU, category, processor..."><p id="adminCount" class="small"></p><div id="adminRows" class="admin-list"></div></div>
+<div id="editPanel" class="admin-card hidden"><h2>Edit product</h2>
+<div class="admin-grid">
+<div class="field"><label>SKU</label><input id="editSku" readonly></div>
+<div class="field"><label>Model</label><input id="editModel"></div>
+<div class="field"><label>Category</label><input id="editCategory"></div>
+<div class="field"><label>Processor brand</label><input id="editProcessorBrand"></div>
+<div class="field"><label>Screen size</label><input id="editScreenSize"></div>
+<div class="field"><label>On-Hand price</label><input id="editOnhand"></div>
+<div class="field"><label>Order-Basis price</label><input id="editOrder"></div>
+<div class="field"><label>On-Hand price label</label><input id="editOnhandLabel"></div>
+<div class="field"><label>Order-Basis price label</label><input id="editOrderLabel"></div>
+<div class="field full"><label>Description</label><textarea id="editDescription"></textarea></div>
+
+<div class="field full"><label>General SEO title</label><input id="editSeoTitle"></div>
+<div class="field full"><label>General SEO description</label><textarea id="editSeoDescription"></textarea></div>
+
+<div class="field full seo-panel">
+<h3>On-Hand SEO</h3>
+<label>SEO title</label><input id="editSeoOnhandTitle" placeholder="Example: ZBook 8 G2i On-Hand Philippines | IONTECH">
+<label>SEO description</label><textarea id="editSeoOnhandDescription" placeholder="SEO description for the on-hand price/listing."></textarea>
+</div>
+
+<div class="field full seo-panel">
+<h3>Order-Basis SEO</h3>
+<label>SEO title</label><input id="editSeoOrderTitle" placeholder="Example: ZBook 8 G2i Order Basis Philippines | IONTECH">
+<label>SEO description</label><textarea id="editSeoOrderDescription" placeholder="SEO description for the order-basis price/listing."></textarea>
+</div>
+</div>
+
+<h3>Product images</h3><div class="image-admin">
+<div class="image-slot"><strong>Image 1</strong><div id="preview1" class="preview" style="margin-top:8px"></div><input id="editImage1" type="file" accept="image/*" style="margin-top:8px"></div>
+<div class="image-slot"><strong>Image 2</strong><div id="preview2" class="preview" style="margin-top:8px"></div><input id="editImage2" type="file" accept="image/*" style="margin-top:8px"></div>
+</div>
+
+<h3>Specifications</h3><div class="table-wrap"><table class="edit-table"><thead><tr><th>Specification</th><th>Value</th><th>Remove</th></tr></thead><tbody id="specRows"></tbody></table></div>
+<button id="addSpec" class="btn btn-secondary" style="margin-top:10px">+ Add specification</button>
+
+<h3>Components / included configuration</h3><div class="table-wrap"><table class="edit-table"><thead><tr><th>Part No.</th><th>Part Description</th><th>Remove</th></tr></thead><tbody id="componentRows"></tbody></table></div>
+<button id="addComponent" class="btn btn-secondary" style="margin-top:10px">+ Add component</button>
+
+<div class="admin-actions"><button id="saveProduct" class="btn btn-primary">Save product</button><button id="cancelEdit" class="btn btn-secondary">Cancel</button><span id="saveStatus" class="status"></span></div>
+</div>
+</section>
+
+<section id="tab-branding" class="admin-section">
+<div class="admin-card"><h2>Branding & SEO</h2><div class="admin-grid">
+<div class="field"><label>Company name</label><input id="companyName"></div>
+<div class="field"><label>Browser/site title</label><input id="siteTitle"></div>
+<div class="field full"><label>Site SEO description</label><textarea id="siteDescription"></textarea></div>
+<div class="field"><label>Company logo</label><input id="logoFile" type="file" accept="image/*"><div id="logoPreview" class="preview" style="margin-top:8px"></div></div>
+</div><div class="admin-actions"><button id="saveSettings" class="btn btn-primary">Save branding & SEO</button><span id="settingsStatus" class="status"></span></div></div>
+</section>
+
+<section id="tab-backup" class="admin-section">
+<div class="admin-card"><h2>Backup</h2><p class="small">Export your browser-stored admin edits before changing browsers or clearing site data.</p>
+<div class="admin-actions"><button id="exportData" class="btn btn-primary">Export backup</button><label class="btn btn-secondary" style="display:inline-block">Import backup<input id="importData" type="file" accept="application/json" hidden></label></div></div>
+</section>
+</section>
+</main>
+
+<script src="./products.js"></script>
+<script src="./app.js"></script>
+<script src="./admin.js"></script>
+</body>
+</html>
